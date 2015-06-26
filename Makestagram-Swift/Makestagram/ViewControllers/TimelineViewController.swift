@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import Parse
 
 class TimelineViewController: UIViewController {
     
     var photoTakingHelper: PhotoTakingHelper?
 
 
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -52,6 +55,16 @@ extension TimelineViewController: UITabBarControllerDelegate {
         photoTakingHelper = PhotoTakingHelper(viewController: self.tabBarController!, callback: { (image: UIImage?) in
             //TODO -- nothing yet
             println("Recived callback contaning image")
+            let imageData = UIImageJPEGRepresentation(image, 0.8)
+            let imageFile = PFFile(data: imageData)
+            imageFile.save()
+            //Code used for actual postting
+            let post = PFObject(className: "Post")
+            post["imageFile"] = imageFile
+            post.save()
+            println("Image Posted to Parse")
+            
         })
+
     }
 }
