@@ -11,16 +11,35 @@ import Parse
 
 class TimelineViewController: UIViewController {
     
+    @IBOutlet weak var tableView: UITableView!
     var photoTakingHelper: PhotoTakingHelper?
-
-
-
+    var posts: [Post] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
         self.tabBarController?.delegate = self
+        
+        let postsQuery = Post.query()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        //Used to start the query process from the ParseHelper Class
+        ParseHelper.timelineRequestForCurrentUser {(result: [AnyObject]?, error: NSError?) -> Void in
+            //Return empty array if the returned Posts are invalid
+            self.posts = result as? [Post] ?? []
+            //Loop to download the image of each post
+            for post in self.posts {
+                //Code to download actual images files from Parse
+                let data = post.imageFile?.getData()
+                //Turn image files into UIImage instances that can be used by the image view
+                post.image = UIImage(data: data!, scale:1.0)
+            }
+            //Load data into the table View
+            self.tableView.reloadData()
+        }
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -39,6 +58,23 @@ class TimelineViewController: UIViewController {
     */
 
 }
+extension TimelineViewController: UITableViewDataSource {
+    //Create a table with enough rows to show all the posts dat asection from Parse
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return posts.count
+    }
+    //Load data from parse into the corresponding table view cell
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("PostCell")  as! PostTableViewCell
+        
+        cell.postImageView.image = posts[indexPath.row].image
+        
+        return cell
+    }
+    
+}
+
+
 //Mark Tab Bar Delegate
 extension TimelineViewController: UITabBarControllerDelegate {
     func tabBarController(tabBarController: UITabBarController, shouldSelectViewController viewController: UIViewController) -> Bool {
