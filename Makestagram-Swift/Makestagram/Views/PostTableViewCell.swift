@@ -14,6 +14,23 @@ class PostTableViewCell: UITableViewCell {
 
     @IBOutlet weak var postImageView: UIImageView!
     
+    @IBOutlet weak var likesIconImageView: UIImageView!
+    
+    @IBOutlet weak var likesLabel: UILabel!
+
+    @IBOutlet weak var likeButton: UIButton!
+
+    @IBOutlet weak var moreButton: UIButton!
+    
+    //Methods to control the actions of the more and like button
+    
+    @IBAction func moreButtonTapped(sender: AnyObject) {
+    }
+    
+    @IBAction func likeButtonTapped(sender: AnyObject) {
+    }
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
