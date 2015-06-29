@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import Bond
 
 class TimelineViewController: UIViewController {
     
@@ -29,13 +30,6 @@ class TimelineViewController: UIViewController {
         ParseHelper.timelineRequestForCurrentUser {(result: [AnyObject]?, error: NSError?) -> Void in
             //Return empty array if the returned Posts are invalid
             self.posts = result as? [Post] ?? []
-            //Loop to download the image of each post
-            for post in self.posts {
-                //Code to download actual images files from Parse
-                let data = post.imageFile?.getData()
-                //Turn image files into UIImage instances that can be used by the image view
-                post.image = UIImage(data: data!, scale:1.0)
-            }
             //Load data into the table View
             self.tableView.reloadData()
         }
@@ -66,8 +60,11 @@ extension TimelineViewController: UITableViewDataSource {
     //Load data from parse into the corresponding table view cell
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PostCell")  as! PostTableViewCell
-        
-        cell.postImageView.image = posts[indexPath.row].image
+        let post = posts[indexPath.row]
+        //Download image for a post right before it's viewedd
+        post.downloadImage()
+        //Assign the upcoming row the post variable so it can recieve the image once downloaded
+        cell.post = post
         
         return cell
     }
@@ -91,7 +88,7 @@ extension TimelineViewController: UITabBarControllerDelegate {
         photoTakingHelper = PhotoTakingHelper(viewController: self.tabBarController!) { (image: UIImage?) in
             //Simplified Code used for postting to Parse
             let post = Post()
-            post.image = image
+            post.image.value = image
             post.uploadPost()
         }
     }

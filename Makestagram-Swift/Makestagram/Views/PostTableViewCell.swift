@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Bond
+
 
 class PostTableViewCell: UITableViewCell {
 
@@ -18,5 +20,15 @@ class PostTableViewCell: UITableViewCell {
     
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
+    }
+    
+    var post: Post? {
+        didSet {
+            //Use optional binding to check if value is nil
+            if let post = post {
+                //Create bidning between downloaded images and our image view
+                post.image ->> postImageView
+            }
+        }
     }
 }

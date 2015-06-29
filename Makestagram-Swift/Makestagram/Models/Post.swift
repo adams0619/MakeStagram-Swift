@@ -8,6 +8,7 @@
 
 import Foundation
 import Parse
+import Bond
 
 class Post : PFObject, PFSubclassing {
     
@@ -15,12 +16,13 @@ class Post : PFObject, PFSubclassing {
     @NSManaged var user: PFUser?
     
     //Variable to save the image that will be uploaded to Parse
-    var image: UIImage?
+    var image: Dynamic<UIImage?> = Dynamic(nil)
+    
     //Property containing info on the background task for uploading photos
     var photoUploadTask: UIBackgroundTaskIdentifier?
    
     func uploadPost() {
-        let imageData = UIImageJPEGRepresentation(image, 0.8)
+        let imageData = UIImageJPEGRepresentation(image.value, 0.8)
         let imageFile = PFFile(data: imageData)
         //Create background task for image uploading, End the task if no photo is uploading
         photoUploadTask = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler{ () -> Void in
@@ -37,6 +39,20 @@ class Post : PFObject, PFSubclassing {
         saveInBackgroundWithBlock(nil)
     }
     
+    
+    func downloadImage() {
+        //Download image if it has not yet been downloaded
+        if (image.value == nil) {
+            //Download in background thread instead of the main (UI) thread
+            imageFile?.getDataInBackgroundWithBlock { (data: NSData?, error: NSError?) -> Void in
+                if let data = data {
+                    //Download image and update post.image accordingly
+                    let image = UIImage(data: data, scale: 1.0)!
+                    self.image.value = image
+                }
+            }
+        }
+    }
     
     //PFSubclassing protocol
     static func parseClassName() -> String {
