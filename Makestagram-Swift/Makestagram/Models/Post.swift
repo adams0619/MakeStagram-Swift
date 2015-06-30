@@ -17,10 +17,54 @@ class Post : PFObject, PFSubclassing {
     
     //Variable to save the image that will be uploaded to Parse
     var image: Dynamic<UIImage?> = Dynamic(nil)
+    //Varaialbe to save the likes
+    var likes =  Dynamic<[PFUser]?>(nil)
     
     //Property containing info on the background task for uploading photos
     var photoUploadTask: UIBackgroundTaskIdentifier?
    
+    // Check to see which likes are available for the loading posts
+    func fetchLikes() {
+        // Check to see if the Array of likes objects is nil
+        if(likes.value != nil) {
+            return
+        }
+        // Call Parse Helper class to fetch the likes for the current post
+        ParseHelper.likesForPost(self, completionBlock: { (var likes: [AnyObject]?, error: NSError?) -> Void in
+            // Filter the list of likes to remove users who no longer exist
+            likes = likes?.filter { like in like[ParseHelper.ParseLikeFromUser] != nil }
+            //Return new array containing the filtered results
+            self.likes.value = likes?.map { like in
+                let like = like as! PFObject
+                let fromUser = like[ParseHelper.ParseLikeFromUser] as! PFUser
+                
+                return fromUser
+            }
+        })
+    }
+    //User method to determine if a post is liked by a user and whether the like button should be displayed or not
+    func doesUserLikePost(user: PFUser) -> Bool {
+        if let likes = likes.value {
+            return contains(likes, user)
+        } else {
+            return false
+        }
+    }
+    
+    func toggleLikePost(user: PFUser) {
+        if (doesUserLikePost(user)) {
+            // if image is liked, unlike it now
+            // 1
+            likes.value = likes.value?.filter { $0 != user }
+            ParseHelper.unlikePost(user, post: self)
+        } else {
+            // if this image is not liked yet, like it now
+            // 2
+            likes.value?.append(user)
+            ParseHelper.likePost(user, post: self)
+        }
+    }
+    // Mark: Upload post to Parse
     func uploadPost() {
         let imageData = UIImageJPEGRepresentation(image.value, 0.8)
         let imageFile = PFFile(data: imageData)
@@ -39,7 +83,7 @@ class Post : PFObject, PFSubclassing {
         saveInBackgroundWithBlock(nil)
     }
     
-    
+    // Mark: Download images method
     func downloadImage() {
         //Download image if it has not yet been downloaded
         if (image.value == nil) {
@@ -58,7 +102,7 @@ class Post : PFObject, PFSubclassing {
     static func parseClassName() -> String {
         return "Post"
     }
-    
+    // Initializer Method
     override init () {
         super.init()
     }

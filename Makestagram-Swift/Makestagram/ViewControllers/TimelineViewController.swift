@@ -63,6 +63,8 @@ extension TimelineViewController: UITableViewDataSource {
         let post = posts[indexPath.row]
         //Download image for a post right before it's viewedd
         post.downloadImage()
+        //Download the corresponding likes for an image
+        post.fetchLikes()
         //Assign the upcoming row the post variable so it can recieve the image once downloaded
         cell.post = post
         

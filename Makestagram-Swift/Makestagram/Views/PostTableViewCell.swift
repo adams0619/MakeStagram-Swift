@@ -8,7 +8,7 @@
 
 import UIKit
 import Bond
-
+import Parse
 
 class PostTableViewCell: UITableViewCell {
 
@@ -25,9 +25,12 @@ class PostTableViewCell: UITableViewCell {
     //Methods to control the actions of the more and like button
     
     @IBAction func moreButtonTapped(sender: AnyObject) {
+        
     }
     
     @IBAction func likeButtonTapped(sender: AnyObject) {
+        println("Like button tapped!")
+        post?.toggleLikePost(PFUser.currentUser()!)
     }
     
     
