@@ -34,7 +34,7 @@ class ParseHelper {
     static let ParseUserUsername = "username"
     
     // Mark: Used to get timeline requests of posts/metadata
-    static func timelineRequestForCurrentUser(completionBlock: PFArrayResultBlock) {
+    static func timelineRequestForCurrentUser(range: Range<Int>, completionBlock: PFArrayResultBlock) {
         //Get list of people that the user currently follows
         let followingQuery = PFQuery(className: ParseFollowClass)
         followingQuery.whereKey(ParseLikeFromUser, equalTo:PFUser.currentUser()!)
@@ -50,10 +50,13 @@ class ParseHelper {
         query.includeKey(ParsePostUser)
         //Order post in the by the most recent first (chronological order
         query.orderByDescending(ParsePostCreatedAt)
+        // Allows us to define the # of items which match our query that can be skipped
+        query.skip = range.startIndex
+        // Limit the numvber of items we want to load
+        query.limit = range.endIndex - range.startIndex
         
         //Return query results to the class/func which called this function
         query.findObjectsInBackgroundWithBlock(completionBlock)
-
         
     }
     

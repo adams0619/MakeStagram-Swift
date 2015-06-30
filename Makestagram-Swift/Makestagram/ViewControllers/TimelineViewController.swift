@@ -8,17 +8,25 @@
 
 import UIKit
 import Parse
+import ConvenienceKit
 import Bond
 
-class TimelineViewController: UIViewController {
+class TimelineViewController: UIViewController, TimelineComponentTarget {
+    
+    let defaultRange = 0...4
+    let additionalRangeSize = 5
     
     @IBOutlet weak var tableView: UITableView!
+    
     var photoTakingHelper: PhotoTakingHelper?
-    var posts: [Post] = []
+    
+    var timelineComponent: TimelineComponent<Post, TimelineViewController>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        timelineComponent = TimelineComponent(target: self)
         self.tabBarController?.delegate = self
         
         let postsQuery = Post.query()
@@ -26,14 +34,19 @@ class TimelineViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        //Used to start the query process from the ParseHelper Class
-        ParseHelper.timelineRequestForCurrentUser {(result: [AnyObject]?, error: NSError?) -> Void in
-            //Return empty array if the returned Posts are invalid
-            self.posts = result as? [Post] ?? []
-            //Load data into the table View
-            self.tableView.reloadData()
+        //Trigger timeline request when the view appears, new posts will be loaded if a maunal pull to refresh method
+        timelineComponent.loadInitialIfRequired()
+    }
+    
+    func loadInRange(range: Range<Int>, completionBlock: ([Post]?) -> Void) {
+        // Requst timeline for the current user
+        ParseHelper.timelineRequestForCurrentUser(range) {
+            (result: [AnyObject]?, error: NSError?) -> Void in
+            // Check the callback and detemrine if it's nil
+            let posts = result as? [Post] ?? []
+            // Pass the posts to the timelineComponenet
+            completionBlock(posts)
         }
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,15 +65,16 @@ class TimelineViewController: UIViewController {
     */
 
 }
+//Mark: TableView Extension
 extension TimelineViewController: UITableViewDataSource {
     //Create a table with enough rows to show all the posts dat asection from Parse
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
+        return timelineComponent.content.count
     }
     //Load data from parse into the corresponding table view cell
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PostCell")  as! PostTableViewCell
-        let post = posts[indexPath.row]
+        let post = timelineComponent.content[indexPath.row]
         //Download image for a post right before it's viewedd
         post.downloadImage()
         //Download the corresponding likes for an image
@@ -72,9 +86,17 @@ extension TimelineViewController: UITableViewDataSource {
     }
     
 }
+// Mark:
+extension TimelineViewController: UITableViewDelegate {
+    func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+        // Used to inform the timelineComponent of the next viewable cell
+        timelineComponent.targetWillDisplayEntry(indexPath.row)
+    }
+}
 
 
-//Mark Tab Bar Delegate
+
+//Mark: Tab Bar Delegate
 extension TimelineViewController: UITabBarControllerDelegate {
     func tabBarController(tabBarController: UITabBarController, shouldSelectViewController viewController: UIViewController) -> Bool {
         if (viewController is PhotoViewController) {
