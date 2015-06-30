@@ -30,7 +30,7 @@ class ParseHelper {
     static let ParseFlaggedContentFromUser = "fromUser"
     static let ParseFlaggedContentToPost = "toPost"
     
-    // User Relations
+    // User Relations->>
     static let ParseUserUsername = "username"
     
     // Mark: Used to get timeline requests of posts/metadata
@@ -98,5 +98,13 @@ class ParseHelper {
         query.findObjectsInBackgroundWithBlock(completionBlock)
     }
     
+}
+// Extension to change the meaning of equality in our ParseHelper class
+extension PFObject : Equatable {
     
 }
+// Function to describe the equlaity of ParseObjects based on thier ObjectID
+public func ==(lhs: PFObject, rhs: PFObject) -> Bool {
+    return lhs.objectId == rhs.objectId
+}
+

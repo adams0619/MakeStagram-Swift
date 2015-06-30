@@ -22,8 +22,10 @@ class PostTableViewCell: UITableViewCell {
 
     @IBOutlet weak var moreButton: UIButton!
     
-    //Methods to control the actions of the more and like button
+    var likeBond: Bond<[PFUser]?>!
     
+    
+    //Methods to control the actions of the more and like button
     @IBAction func moreButtonTapped(sender: AnyObject) {
         
     }
@@ -46,9 +48,44 @@ class PostTableViewCell: UITableViewCell {
         didSet {
             //Use optional binding to check if value is nil
             if let post = post {
-                //Create bidning between downloaded images and our image view
+                //Create binding between downloaded images and our image view
                 post.image ->> postImageView
+                
+                // Create binding between likes property from this postTableView and our likes
+                post.likes ->> likeBond
             }
         }
     }
+        
+    func stringFromUserList(userList: [PFUser]) -> String {
+        // Use map to replace PFObjects with actual usernames
+        let usernameList = userList.map { user in user.username! }
+        // Create single string containing all user that is comma-seperated
+        let commaSeperatedList = ", ".join(usernameList)
+        
+        return commaSeperatedList
+    }
+    
+    // Initializer for the like Bond
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        // Create new bond similar to the likeBond
+        likeBond = Bond<[PFUser]?>() { [unowned self] likeList in
+            // Run this blokc of code whenever the number if likes changes
+            if let likeList = likeList {
+                // Update the list of users who have liked the post
+                self.likesLabel.text = self.stringFromUserList(likeList)
+                // Change the state of the likeButton
+                self.likeButton.selected = contains(likeList, PFUser.currentUser()!)
+                // Hide small like button when current post has no likes
+                self.likesIconImageView.hidden = (likeList.count == 0)
+            } else {
+                // If no users like a post then reset everything to default
+                self.likesLabel.text = ""
+                self.likeButton.selected = false
+                self.likesIconImageView.hidden = true
+            }
+        }
+    }
+        
 }
