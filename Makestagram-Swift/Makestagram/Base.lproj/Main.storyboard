@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="mF1-zM-hqV">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="mF1-zM-hqV">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -16,11 +16,89 @@
                     <view key="view" contentMode="scaleToFill" id="PGI-sk-vzq">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="9jH-Il-6Pm">
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="FES-f3-Jgy"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="0x8-iH-E1w" id="aZY-iv-Qwm"/>
+                                </connections>
+                            </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="mWf-PU-emN">
+                                <rect key="frame" x="0.0" y="72" width="600" height="479"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UserCell" rowHeight="50" id="ZUH-nX-7pE" customClass="FriendSearchTableViewCell" customModule="Makestagram" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZUH-nX-7pE" id="rkk-Nk-ZSP">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EKk-BW-v6Q">
+                                                    <rect key="frame" x="20" y="14" width="472" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="WSN-qQ-WdF"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bXe-Om-dBL">
+                                                    <rect key="frame" x="540" y="3" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="3Cz-6d-lGW"/>
+                                                        <constraint firstAttribute="width" constant="44" id="Lb3-oV-22h"/>
+                                                    </constraints>
+                                                    <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                                                    <state key="normal" image="Add">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="selected" image="Check"/>
+                                                    <connections>
+                                                        <action selector="followButtonTapped:" destination="ZUH-nX-7pE" eventType="touchUpInside" id="Mf2-EX-FcY"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="EKk-BW-v6Q" firstAttribute="leading" secondItem="rkk-Nk-ZSP" secondAttribute="leadingMargin" constant="12" id="FQV-qV-D5f"/>
+                                                <constraint firstAttribute="centerY" secondItem="bXe-Om-dBL" secondAttribute="centerY" id="b7b-fS-WGO"/>
+                                                <constraint firstAttribute="centerY" secondItem="EKk-BW-v6Q" secondAttribute="centerY" id="ffg-gk-pJ3"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="EKk-BW-v6Q" secondAttribute="trailing" constant="100" id="gIl-Nq-Hzw"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="bXe-Om-dBL" secondAttribute="trailing" constant="8" id="zDr-D7-QWh"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="followButton" destination="bXe-Om-dBL" id="yL7-Ze-hsT"/>
+                                            <outlet property="usernameLabel" destination="EKk-BW-v6Q" id="l8M-s2-3lh"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="0x8-iH-E1w" id="Mjn-P9-Qft"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="9jH-Il-6Pm" firstAttribute="top" secondItem="055-gS-FMf" secondAttribute="bottom" constant="8" id="9zh-7C-Wbd"/>
+                            <constraint firstAttribute="trailing" secondItem="9jH-Il-6Pm" secondAttribute="trailing" id="jkb-kh-dx5"/>
+                            <constraint firstItem="9jH-Il-6Pm" firstAttribute="leading" secondItem="PGI-sk-vzq" secondAttribute="leading" id="mRG-st-usi"/>
+                            <constraint firstAttribute="trailing" secondItem="mWf-PU-emN" secondAttribute="trailing" id="nDn-cy-Uia"/>
+                            <constraint firstItem="mWf-PU-emN" firstAttribute="top" secondItem="9jH-Il-6Pm" secondAttribute="bottom" id="oun-XG-aI8"/>
+                            <constraint firstItem="mWf-PU-emN" firstAttribute="leading" secondItem="PGI-sk-vzq" secondAttribute="leading" id="sHt-vI-GFa"/>
+                            <constraint firstItem="qqI-ge-pb3" firstAttribute="top" secondItem="mWf-PU-emN" secondAttribute="bottom" id="yMH-T5-O2g"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="" image="People" id="gD3-ma-BsB">
                         <inset key="imageInsets" minX="0.0" minY="5" maxX="0.0" maxY="-5"/>
                     </tabBarItem>
+                    <connections>
+                        <outlet property="searchBar" destination="9jH-Il-6Pm" id="10x-dO-yEc"/>
+                        <outlet property="tableView" destination="mWf-PU-emN" id="QDk-eq-kjo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dgC-C5-eyP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -178,7 +256,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="zfK-6R-Psa">
             <objects>
-                <tabBarController id="mF1-zM-hqV" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarController" id="mF1-zM-hqV" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="aoJ-W6-J0V">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -197,7 +275,9 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Add" width="42" height="42"/>
         <image name="Camera" width="40" height="30"/>
+        <image name="Check" width="42" height="42"/>
         <image name="Heart" width="72" height="68"/>
         <image name="Heart-selected" width="72" height="68"/>
         <image name="Home" width="38" height="36"/>

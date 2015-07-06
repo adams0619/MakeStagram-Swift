@@ -9,11 +9,14 @@
 import Foundation
 import Parse
 import Bond
+import ConvenienceKit
 
 class Post : PFObject, PFSubclassing {
     
     @NSManaged var imageFile: PFFile?
     @NSManaged var user: PFUser?
+    // Create cache to store images rather then loading them from the disk when displayed on-screen
+    static var imageCache: NSCacheSwift<String, UIImage>!
     
     //Variable to save the image that will be uploaded to Parse
     var image: Dynamic<UIImage?> = Dynamic(nil)
@@ -85,6 +88,9 @@ class Post : PFObject, PFSubclassing {
     
     // Mark: Download images method
     func downloadImage() {
+        // Check to see if you can assign the image from the cache if it's already been downloaded
+        image.value = Post.imageCache[self.imageFile!.name]
+        
         //Download image if it has not yet been downloaded
         if (image.value == nil) {
             //Download in background thread instead of the main (UI) thread
@@ -93,6 +99,8 @@ class Post : PFObject, PFSubclassing {
                     //Download image and update post.image accordingly
                     let image = UIImage(data: data, scale: 1.0)!
                     self.image.value = image
+                    // Save the downloaded image to the cache
+                    Post.imageCache[self.imageFile!.name] = image
                 }
             }
         }
@@ -112,6 +120,8 @@ class Post : PFObject, PFSubclassing {
         dispatch_once(&onceToken) {
             //Let parse know about the subclass
             self.registerSubclass()
+            
+            Post.imageCache = NSCacheSwift<String, UIImage>()
         }
     }
 }

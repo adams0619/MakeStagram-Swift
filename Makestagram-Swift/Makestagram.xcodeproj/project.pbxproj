@@ -50,6 +50,7 @@
 		D77B55921B3DF8E000E080A8 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77B55911B3DF8E000E080A8 /* Post.swift */; };
 		D78229121B41BE3B00896463 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D78229111B41BE3B00896463 /* PostTableViewCell.swift */; };
 		D78229141B41C2D300896463 /* ParseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D78229131B41C2D300896463 /* ParseHelper.swift */; };
+		D797C6371B447D7200E94F4C /* FriendSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D797C6361B447D7200E94F4C /* FriendSearchTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -195,6 +196,7 @@
 		D77B55911B3DF8E000E080A8 /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		D78229111B41BE3B00896463 /* PostTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		D78229131B41C2D300896463 /* ParseHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseHelper.swift; sourceTree = "<group>"; };
+		D797C6361B447D7200E94F4C /* FriendSearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendSearchTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -348,6 +350,7 @@
 		62C8C1E21B06BD6500DC3EA7 /* Makestagram */ = {
 			isa = PBXGroup;
 			children = (
+				D797C62F1B447D0100E94F4C /* FriendSearch */,
 				D782290A1B41BE1000896463 /* Views */,
 				D77B55901B3DF88800E080A8 /* Models */,
 				D77B558D1B3DC8EB00E080A8 /* PhotoTaking */,
@@ -410,6 +413,14 @@
 				D78229111B41BE3B00896463 /* PostTableViewCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		D797C62F1B447D0100E94F4C /* FriendSearch */ = {
+			isa = PBXGroup;
+			children = (
+				D797C6361B447D7200E94F4C /* FriendSearchTableViewCell.swift */,
+			);
+			path = FriendSearch;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -599,6 +610,7 @@
 				D77B55851B3DC28200E080A8 /* TimelineViewController.swift in Sources */,
 				D77B558F1B3DC91B00E080A8 /* PhotoTakingHelper.swift in Sources */,
 				D77B55871B3DC2A800E080A8 /* PhotoViewController.swift in Sources */,
+				D797C6371B447D7200E94F4C /* FriendSearchTableViewCell.swift in Sources */,
 				62C8C1E61B06BD6500DC3EA7 /* AppDelegate.swift in Sources */,
 				627718971B0A581700AF5C6E /* FilterViewController.swift in Sources */,
 				D78229141B41C2D300896463 /* ParseHelper.swift in Sources */,
@@ -748,6 +760,7 @@
 					"$(PROJECT_DIR)/Frameworks/ConvenienceKit/ConvenienceKit/Frameworks",
 				);
 				INFOPLIST_FILE = Makestagram/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -767,6 +780,7 @@
 					"$(PROJECT_DIR)/Frameworks/ConvenienceKit/ConvenienceKit/Frameworks",
 				);
 				INFOPLIST_FILE = Makestagram/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

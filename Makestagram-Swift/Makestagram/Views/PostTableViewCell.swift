@@ -46,6 +46,17 @@ class PostTableViewCell: UITableViewCell {
     
     var post: Post? {
         didSet {
+            // Code for optimizing memory by discarding posts that are no longer displayed
+            if let oldValue = oldValue where oldValue != post {
+                likeBond.unbindAll()
+                postImageView.designatedBond.unbindAll()
+                
+                if (oldValue.image.bonds.count == 0) {
+                    oldValue.image.value = nil
+                }
+            }
+            
+            
             //Use optional binding to check if value is nil
             if let post = post {
                 //Create binding between downloaded images and our image view

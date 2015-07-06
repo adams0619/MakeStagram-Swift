@@ -24,6 +24,7 @@ public protocol TimelineComponentTarget: class {
   var additionalRangeSize: Int { get }
   /// A reference to the TableView to which the Timeline Component is applied.
   var tableView: UITableView! { get }
+    
   /**
     This method should load the items within the specified range and call the 
     `completionBlock`, with the items as argument, upon completion.
@@ -65,7 +66,6 @@ public class TimelineComponent <T: Equatable, S: TimelineComponentTarget where S
 
   /**
     Creates a Timeline Component and connects it to its target.
-  
     :param: target The class on which the Timeline Component shall operate
   */
   public init(target: S) {
