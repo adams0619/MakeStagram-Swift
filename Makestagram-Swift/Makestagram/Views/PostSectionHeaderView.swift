@@ -18,7 +18,10 @@ class PostSectionHeaderView: UITableViewCell {
     var post: Post? {
         didSet {
             if let post = post {
+                // Show the username
                 usernameLabel.text = post.user?.username
+                // Show the time which has passed since this post was created otherwise show an empty string
+                postTimeLabel.text = post.createdAt?.shortTimeAgoSinceDate(NSDate()) ?? ""
             }
         }
     }
