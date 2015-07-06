@@ -71,14 +71,19 @@ class TimelineViewController: UIViewController, TimelineComponentTarget {
 }
 //Mark: TableView Extension
 extension TimelineViewController: UITableViewDataSource {
-    //Create a table with enough rows to show all the posts dat asection from Parse
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return timelineComponent.content.count
+    // Swap rows/sections in tableView so you can view each post as a section with a proper header containing info on the orgianl poster as well as when the post was posted.
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return self.timelineComponent.content.count
     }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
     //Load data from parse into the corresponding table view cell
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("PostCell")  as! PostTableViewCell
-        let post = timelineComponent.content[indexPath.row]
+        let post = timelineComponent.content[indexPath.section]
         //Download image for a post right before it's viewedd
         post.downloadImage()
         //Download the corresponding likes for an image
@@ -89,12 +94,27 @@ extension TimelineViewController: UITableViewDataSource {
         return cell
     }
     
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerCell = tableView.dequeueReusableCellWithIdentifier("PostHeader") as! PostSectionHeaderView
+        
+        let post = self.timelineComponent.content[section]
+        headerCell.post = post
+        
+        return headerCell
+    }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    
 }
 // Mark:
 extension TimelineViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
         // Used to inform the timelineComponent of the next viewable cell
-        timelineComponent.targetWillDisplayEntry(indexPath.row)
+        timelineComponent.targetWillDisplayEntry(indexPath.section)
     }
 }
 
