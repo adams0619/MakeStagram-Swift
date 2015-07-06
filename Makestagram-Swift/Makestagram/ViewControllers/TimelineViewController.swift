@@ -42,6 +42,10 @@ class TimelineViewController: UIViewController, TimelineComponentTarget {
         // Requst timeline for the current user
         ParseHelper.timelineRequestForCurrentUser(range) {
             (result: [AnyObject]?, error: NSError?) -> Void in
+            // Handle any errors that might occur
+            if let error = error {
+                ErrorHandling.defaultErrorHandler(error)
+            }
             // Check the callback and detemrine if it's nil
             let posts = result as? [Post] ?? []
             // Pass the posts to the timelineComponenet

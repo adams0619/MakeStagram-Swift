@@ -34,6 +34,10 @@ class Post : PFObject, PFSubclassing {
         }
         // Call Parse Helper class to fetch the likes for the current post
         ParseHelper.likesForPost(self, completionBlock: { (var likes: [AnyObject]?, error: NSError?) -> Void in
+            // Handle any errors that might occur
+            if let error = error {
+                ErrorHandling.defaultErrorHandler(error)
+            }
             // Filter the list of likes to remove users who no longer exist
             likes = likes?.filter { like in like[ParseHelper.ParseLikeFromUser] != nil }
             //Return new array containing the filtered results
@@ -77,13 +81,17 @@ class Post : PFObject, PFSubclassing {
         }
         //Get callback when the photo upload is complete. End the background Task
         imageFile.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+            // Handle any errors that might occur
+            if let error = error {
+                ErrorHandling.defaultErrorHandler(error)
+            }
             UIApplication.sharedApplication().endBackgroundTask(self.photoUploadTask!)
         }
         
         //Added user info to Image POST
         user = PFUser.currentUser()
         self.imageFile = imageFile
-        saveInBackgroundWithBlock(nil)
+        saveInBackgroundWithBlock(ErrorHandling.errorHandlingCallback)
     }
     
     // Mark: Download images method
@@ -95,6 +103,10 @@ class Post : PFObject, PFSubclassing {
         if (image.value == nil) {
             //Download in background thread instead of the main (UI) thread
             imageFile?.getDataInBackgroundWithBlock { (data: NSData?, error: NSError?) -> Void in
+                // Handle any errors that might occur
+                if let error = error {
+                    ErrorHandling.defaultErrorHandler(error)
+                }
                 if let data = data {
                     //Download image and update post.image accordingly
                     let image = UIImage(data: data, scale: 1.0)!

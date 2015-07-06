@@ -85,7 +85,7 @@ class ParseHelper {
         followObject.setObject(user, forKey: ParseFollowFromUser)
         followObject.setObject(toUser, forKey: ParseFollowToUser)
         
-        followObject.saveInBackgroundWithBlock(nil)
+        followObject.saveInBackgroundWithBlock(ErrorHandling.errorHandlingCallback)
     }
     
     /**
@@ -101,11 +101,14 @@ class ParseHelper {
         
         query.findObjectsInBackgroundWithBlock {
             (results: [AnyObject]?, error: NSError?) -> Void in
-            
+            // Handle any errors that might occur
+            if let error = error {
+                ErrorHandling.defaultErrorHandler(error)
+            }
             let results = results as? [PFObject] ?? []
             
             for follow in results {
-                follow.deleteInBackgroundWithBlock(nil)
+                follow.deleteInBackgroundWithBlock(ErrorHandling.errorHandlingCallback)
             }
         }
     }
@@ -170,7 +173,7 @@ class ParseHelper {
         likeObject[ParseLikeFromUser] = user
         likeObject[ParseLikeToPost] = post
         //Save like Object to Parse
-        likeObject.saveInBackgroundWithBlock(nil)
+        likeObject.saveInBackgroundWithBlock(ErrorHandling.errorHandlingCallback)
     }
     
     // Mark: Unlike a given post it to Parse
@@ -190,7 +193,7 @@ class ParseHelper {
             // Iterate through Parse to find all likeObjects that contain our given parameters
             if let results = results as? [PFObject] {
                 for likes in results {
-                    likes.deleteInBackgroundWithBlock(nil)
+                    likes.deleteInBackgroundWithBlock(ErrorHandling.errorHandlingCallback)
                 }
             }
         }
